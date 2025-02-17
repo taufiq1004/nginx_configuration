@@ -37,22 +37,6 @@ brew install nginx
 ```sh
 go get -u github.com/labstack/echo/v4
 ```
-
-### **C. Mengirim Request 10x dengan Curl**
-
-#### **1. GET Request 10x**
-```sh
-for i in {1..10}; do curl -X GET http://localhost:8080/user; done
-```
-
-#### **2. POST Request 10x**
-```sh
-for i in {1..10}; do
-  curl -X POST http://localhost:8080/user/create \
-       -H "Content-Type: application/json" \
-       -d "{\"id\": $i, \"name\": \"Alice$i\", \"email\": \"alice$i@example.com\", \"age\": 25}"
-done
-```
 ---
 
 ## 3. Menjalankan Backend Golang
@@ -155,6 +139,22 @@ curl -X POST http://localhost:8080/user/create \
       }
   }
   ```
+
+  ### **C. Mengirim Request 10x dengan Curl**
+
+#### **1. GET Request 10x**
+```sh
+for i in {1..10}; do curl -X GET http://localhost:8080/user; done
+```
+
+#### **2. POST Request 10x**
+```sh
+for i in {1..10}; do
+  curl -X POST http://localhost:8080/user/create \
+       -H "Content-Type: application/json" \
+       -d "{\"id\": $i, \"name\": \"Alice$i\", \"email\": \"alice$i@example.com\", \"age\": 25}"
+done
+```
 
 ---
 
