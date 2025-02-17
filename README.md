@@ -38,21 +38,39 @@ brew install nginx
 go get -u github.com/labstack/echo/v4
 ```
 
+### **C. Mengirim Request 10x dengan Curl**
+
+#### **1. GET Request 10x**
+```sh
+for i in {1..10}; do curl -X GET http://localhost:8080/user; done
+```
+
+#### **2. POST Request 10x**
+```sh
+for i in {1..10}; do
+  curl -X POST http://localhost:8080/user/create \
+       -H "Content-Type: application/json" \
+       -d "{\"id\": $i, \"name\": \"Alice$i\", \"email\": \"alice$i@example.com\", \"age\": 25}"
+done
+```
 ---
 
 ## 3. Menjalankan Backend Golang
 
 ### **A. Menjalankan Backend Secara Lokal**
 
-Buka terminal dan jalankan perintah berikut untuk menjalankan server:
+Buka terminal dan jalankan perintah-perintah berikut satu per satu di terminal yang berbeda untuk menjalankan server
 
 ```sh
 PORT=8081 go run main.go
+PORT=8082 go run main.go
+PORT=8083 go run main.go
 ```
 
 Untuk menjalankan beberapa instance backend:
 
 ```sh
+PORT=8081 go run main.go &
 PORT=8082 go run main.go &
 PORT=8083 go run main.go &
 ```
@@ -142,7 +160,31 @@ curl -X POST http://localhost:8080/user/create \
 
 ## 6. Troubleshooting
 
-### **A. Cek Status Backend**
+### **A. Error: invalid PID number "" in nginx.pid**
+#### **Solusi untuk Ubuntu dan macOS:**
+1. Hapus file **nginx.pid** yang corrupt:
+    ```sh
+    sudo rm -f /usr/local/var/run/nginx.pid  # macOS
+    sudo rm -f /run/nginx.pid  # Ubuntu
+    ```
+2. Restart Nginx:
+    ```sh
+    sudo nginx
+    ```
+
+### **B. Error: Permission denied pada error.log atau access.log**
+#### **Solusi untuk macOS:**
+```sh
+sudo chown -R $(whoami) /usr/local/var/log/nginx/
+sudo chmod -R 755 /usr/local/var/log/nginx/
+```
+#### **Solusi untuk Ubuntu:**
+```sh
+sudo chown -R www-data:www-data /var/log/nginx/
+sudo chmod -R 755 /var/log/nginx/
+```
+
+### **C. Cek Status Backend**
 ```sh
 lsof -i :8081
 lsof -i :8082
@@ -150,15 +192,23 @@ lsof -i :8083
 ```
 Jika tidak ada proses yang berjalan, jalankan ulang backend.
 
-### **B. Cek Log Error Nginx**
+### **D. Cek Log Error Nginx**
 ```sh
 cat /usr/local/var/log/nginx/error.log  # macOS
 cat /var/log/nginx/error.log  # Ubuntu
 ```
 
-### **C. Restart Nginx dan Backend**
+### **E. Restart Nginx dan Backend**
 ```sh
 sudo nginx -s stop && sudo nginx
 brew services restart nginx  # Untuk macOS
+sudo systemctl restart nginx  # Untuk Ubuntu
 ```
+
+### **F. Menjalankan Nginx dengan sudo**
+```sh
+sudo nginx
+```
+
+Jika masalah masih terjadi, cek log error untuk menemukan penyebabnya!
 
