@@ -127,6 +127,7 @@ go get -u github.com/labstack/echo/v4
 
 ```sh
 go mod init nginx_configuration
+go mod tidy
 go mod vendor
 ```
 
