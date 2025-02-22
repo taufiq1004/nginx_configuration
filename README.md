@@ -68,8 +68,8 @@ Server akan berjalan di `http://localhost:8081/user` dan `http://localhost:8081/
 Edit file konfigurasi Nginx:
 
 ```sh
-sudo nano /usr/local/etc/nginx/nginx.conf  # macOS
-sudo nano /etc/nginx/nginx.conf   # Ubuntu
+sudo vi /usr/local/etc/nginx/nginx.conf  # macOS
+sudo vi /etc/nginx/nginx.conf   # Ubuntu
 ```
 
 Tambahkan konfigurasi berikut di dalam blok `http`:
@@ -140,11 +140,12 @@ curl -X POST http://localhost:8080/user/create \
   }
   ```
 
-  ### **C. Mengirim Request 10x dengan Curl**
+### **C. Mengirim Request 10x dengan Curl**
 
 #### **1. GET Request 10x**
 ```sh
-for i in {1..10}; do curl -X GET http://localhost:8080/user; done
+for i in {1..10}; do curl -X GET http://localhost:8080/user 
+-H "Content-Type: application/json"; done
 ```
 
 #### **2. POST Request 10x**
