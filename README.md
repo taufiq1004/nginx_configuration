@@ -113,8 +113,8 @@ go version
 Untuk memulai, clone repository proyek ini menggunakan Git:
 
 ```sh
-git clone https://github.com/kusnadi8605/sample.git
-cd sample
+git clone https://github.com/kusnadi8605/nginx_configuration
+cd nginx_configuration
 ```
 
 ### **C. Instalasi Echo Framework**
@@ -126,7 +126,7 @@ go get -u github.com/labstack/echo/v4
 ### **D. Inisialisasi Modul Golang**
 
 ```sh
-go mod init sample
+go mod init nginx_configuration
 go mod vendor
 ```
 
