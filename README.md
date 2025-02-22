@@ -1,6 +1,7 @@
 # Sample Backend Golang dengan Echo dan Load Balancer Nginx
 
 ## 1. Deskripsi
+
 Proyek ini adalah backend API yang dibuat menggunakan **Golang** dan **Echo Framework**. API ini memiliki dua endpoint utama:
 
 - **GET /user** → Mengembalikan data user dalam format JSON.
@@ -12,58 +13,21 @@ Untuk meningkatkan ketersediaan dan performa, kita menggunakan **Nginx sebagai L
 
 ## 2. Instalasi
 
-### **A. Instalasi di Ubuntu**
+### **A. Instalasi Nginx**
 
-#### **1. Install Nginx**
+#### **1. Instalasi di Ubuntu**
+
 ```sh
-sudo apt install nginx -y
+sudo apt update && sudo apt install nginx -y
 ```
 
-#### **2. Install Echo Framework**
-```sh
-go get -u github.com/labstack/echo/v4
-```
+#### **2. Instalasi di macOS**
 
----
-
-### **B. Instalasi di macOS**
-
-#### **1. Install Nginx**
 ```sh
 brew install nginx
 ```
 
-#### **2. Install Echo Framework**
-```sh
-go get -u github.com/labstack/echo/v4
-```
----
-
-## 3. Menjalankan Backend Golang
-
-### **A. Menjalankan Backend Secara Lokal**
-
-Buka terminal dan jalankan perintah-perintah berikut satu per satu di terminal yang berbeda untuk menjalankan server
-
-```sh
-PORT=8081 go run main.go
-PORT=8082 go run main.go
-PORT=8083 go run main.go
-```
-
-Untuk menjalankan beberapa instance backend:
-
-```sh
-PORT=8081 go run main.go &
-PORT=8082 go run main.go &
-PORT=8083 go run main.go &
-```
-
-Server akan berjalan di `http://localhost:8081/user` dan `http://localhost:8081/user/create`.
-
----
-
-## 4. Konfigurasi Load Balancer dengan Nginx
+### **B. Konfigurasi Load Balancer dengan Nginx**
 
 Edit file konfigurasi Nginx:
 
@@ -96,7 +60,8 @@ http {
 }
 ```
 
-### **Restart Nginx**
+### **Restart Nginx untuk Menerapkan Perubahan**
+
 ```sh
 sudo nginx -s reload  # Jika sudah berjalan
 sudo systemctl restart nginx  # Untuk Ubuntu
@@ -105,50 +70,110 @@ brew services restart nginx  # Untuk macOS
 
 ---
 
+## 3. Instalasi Golang dan Echo Framework
+
+### **A. Instalasi Golang**
+
+#### **1. Di Ubuntu**
+
+```sh
+sudo apt update && sudo apt install golang -y
+```
+
+Tambahkan konfigurasi Golang di `~/.profile` atau `~/.bashrc`:
+
+```sh
+echo 'export GOPATH=$HOME/go' >> ~/.profile
+echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.profile
+source ~/.profile
+```
+
+#### **2. Di macOS**
+
+```sh
+brew install go
+```
+
+Tambahkan konfigurasi Golang di `~/.bash_profile` atau `~/.zshrc`:
+
+```sh
+echo 'export GOPATH=$HOME/go' >> ~/.bash_profile
+echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+Untuk memastikan Golang sudah terinstal:
+
+```sh
+go version
+```
+
+### **B. Clone Repository Proyek Echo**
+
+Untuk memulai, clone repository proyek ini menggunakan Git:
+
+```sh
+git clone git clone https://github.com/kusnadi8605/nginx_configuration
+cd nginx_configuration
+```
+
+### **C. Instalasi Echo Framework**
+
+```sh
+go get -u github.com/labstack/echo/v4
+```
+
+### **D. Inisialisasi Modul Golang**
+
+```sh
+go mod init sample
+go mod vendor
+```
+
+---
+
+## 4. Menjalankan Backend Golang
+
+### **A. Menjalankan Backend Secara Lokal**
+
+Buka terminal dan jalankan perintah berikut satu per satu di terminal yang berbeda untuk menjalankan beberapa instance server:
+
+```sh
+PORT=8081 go run main.go &
+PORT=8082 go run main.go &
+PORT=8083 go run main.go &
+```
+
+Server akan berjalan di `http://localhost:8081/user` dan `http://localhost:8081/user/create`.
+
+---
+
 ## 5. Testing API dengan Curl
 
 ### **A. GET Request**
+
 ```sh
 curl -X GET http://localhost:8080/user
 ```
-- **Response:**
-  ```json
-  {
-      "id": 1,
-      "name": "John Doe",
-      "email": "johndoe@example.com",
-      "age": 30
-  }
-  ```
 
 ### **B. POST Request**
+
 ```sh
 curl -X POST http://localhost:8080/user/create \
      -H "Content-Type: application/json" \
      -d '{"id": 2, "name": "Alice", "email": "alice@example.com", "age": 25}'
 ```
-- **Response:**
-  ```json
-  {
-      "message": "User created successfully",
-      "user": {
-          "id": 2,
-          "name": "Alice",
-          "email": "alice@example.com",
-          "age": 25
-      }
-  }
-  ```
 
 ### **C. Mengirim Request 10x dengan Curl**
 
 #### **1. GET Request 10x**
+
 ```sh
-for i in {1..10}; do curl -X GET http://localhost:8080/user 
--H "Content-Type: application/json"; done
+for i in {1..10}; do curl -X GET http://localhost:8080/user; done
 ```
 
 #### **2. POST Request 10x**
+
 ```sh
 for i in {1..10}; do
   curl -X POST http://localhost:8080/user/create \
@@ -162,54 +187,49 @@ done
 ## 6. Troubleshooting
 
 ### **A. Error: invalid PID number "" in nginx.pid**
+
 #### **Solusi untuk Ubuntu dan macOS:**
+
 1. Hapus file **nginx.pid** yang corrupt:
-    ```sh
-    sudo rm -f /usr/local/var/run/nginx.pid  # macOS
-    sudo rm -f /run/nginx.pid  # Ubuntu
-    ```
+   ```sh
+   sudo rm -f /usr/local/var/run/nginx.pid  # macOS
+   sudo rm -f /run/nginx.pid  # Ubuntu
+   ```
 2. Restart Nginx:
-    ```sh
-    sudo nginx
-    ```
+   ```sh
+   sudo nginx
+   ```
 
 ### **B. Error: Permission denied pada error.log atau access.log**
+
 #### **Solusi untuk macOS:**
+
 ```sh
 sudo chown -R $(whoami) /usr/local/var/log/nginx/
 sudo chmod -R 755 /usr/local/var/log/nginx/
 ```
+
 #### **Solusi untuk Ubuntu:**
+
 ```sh
 sudo chown -R www-data:www-data /var/log/nginx/
 sudo chmod -R 755 /var/log/nginx/
 ```
 
 ### **C. Cek Status Backend**
+
 ```sh
 lsof -i :8081
 lsof -i :8082
 lsof -i :8083
 ```
+
 Jika tidak ada proses yang berjalan, jalankan ulang backend.
 
 ### **D. Cek Log Error Nginx**
+
 ```sh
 cat /usr/local/var/log/nginx/error.log  # macOS
 cat /var/log/nginx/error.log  # Ubuntu
 ```
-
-### **E. Restart Nginx dan Backend**
-```sh
-sudo nginx -s stop && sudo nginx
-brew services restart nginx  # Untuk macOS
-sudo systemctl restart nginx  # Untuk Ubuntu
-```
-
-### **F. Menjalankan Nginx dengan sudo**
-```sh
-sudo nginx
-```
-
-Jika masalah masih terjadi, cek log error untuk menemukan penyebabnya!
 
