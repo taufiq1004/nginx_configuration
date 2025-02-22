@@ -113,8 +113,8 @@ go version
 Untuk memulai, clone repository proyek ini menggunakan Git:
 
 ```sh
-git clone git clone https://github.com/kusnadi8605/nginx_configuration
-cd nginx_configuration
+git clone https://github.com/kusnadi8605/sample.git
+cd sample
 ```
 
 ### **C. Instalasi Echo Framework**
